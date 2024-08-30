@@ -1,0 +1,4 @@
+*.pyc
+__pycache__/
+cogs/__pycache__
+apikeys.py
