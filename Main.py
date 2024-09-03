@@ -36,14 +36,12 @@ bot = commands.Bot(command_prefix= get_server_prefix, intents=intents)
 async def on_guild_join(guild):
     owner = guild.owner
     server = guild.name
-    await owner.send(f"Thank you for adding The Holy Roller to your server **{server}**")
+    await owner.send(f"Thank you for adding The Holy Roller to **{server}**")
     await bot.pool.execute('INSERT INTO info (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2', guild.id, DEFAULT_PREFIX)
 
     #  on_guild_remove
 @bot.event
 async def on_guild_remove(guild):
-    print("on remove")
-    print(guild.id)
     await bot.pool.execute('DELETE FROM info WHERE guild_id = $1', guild.id)
     
 ##  Commands
