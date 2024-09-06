@@ -61,6 +61,8 @@ class settings(commands.Cog):
     async def on_ready(self):
         await self.bot.tree.sync()
         print("---|settings   cog loaded!|---", current_time())
+
+# settings channels #FIXME
     
     @group.command(name="channels", description="Configure channels")
     @app_commands.checks.has_permissions(administrator = True)
@@ -88,6 +90,8 @@ class settings(commands.Cog):
             Type = "channel"
             To = channel.mention
             await log_entry(self, interaction, What, Type, To)
+
+# settings message #FIXME
 
     @group.command(name="messages", description="Configure your welcome and goodbye messages")
     @app_commands.checks.has_permissions(administrator = True)
@@ -158,6 +162,7 @@ class settings(commands.Cog):
                 To = rgb
                 await log_entry(self, interaction, What, Type, To)
 
+# settings show #FIXME
 
     @group.command(name="show", description="Show current settings for the server")
     @app_commands.checks.has_permissions(administrator = True)
@@ -238,6 +243,8 @@ class settings(commands.Cog):
         show_embed.set_footer(text=f"{setup_channels}/3 channels set\n{setup_pics}/2 attachments set\nUTC: {current_time()}")
         await interaction.response.send_message(embed=show_embed)
 
+# settings help #FIXME
+
     @group.command(name="help", description="Instructions on how to use the /settings commands.")
     async def settings_help(self, interaction: discord.Interaction):
         file1 = discord.File('Images/Holly_Roller_pfp.png')
@@ -267,6 +274,8 @@ class settings(commands.Cog):
 
         embed.set_footer(text=f"UTC: {current_time()}")
         await interaction.response.send_message(files=[file1, file2], embed=embed)
+
+# Errors #FIXME
 
     @channels.error
     async def channels_error(self, interaction: discord.Interaction, error):
