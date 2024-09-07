@@ -38,12 +38,12 @@ async def log_entry(self, ctx, user, action, author_id, reason, time, channel):
     image_file = File("Images/moderation_icon.png", filename="moderation_icon.png")
     log_entry_embed = discord.Embed(title="Moderation action!", color=discord.Color.from_rgb(140,27,27))
     if reason == None:
-        log_entry_embed.add_field(name="", value=f"User **{user}** was {action} by **{author_name}**.")
+        log_entry_embed.add_field(name="", value=f"User **{user}** was {action} by **{author_name}**.", inline=True)
     else:
-        log_entry_embed.add_field(name="", value=f"User **{user}** was {action} by **{author_name}** for **{reason}**.")
-    log_entry_embed.set_thumbnail(url="attachment://moderation_icon.png") 
+        log_entry_embed.add_field(name="", value=f"User **{user}** was {action} by **{author_name}** for **{reason}**.", inline=True)
     if action == "muted":
-        log_entry_embed.add_field(name="", value= f"Time: **{time}**")
+        log_entry_embed.add_field(name="", value= f"Time: **{time}**", inline=False)
+    log_entry_embed.set_thumbnail(url="attachment://moderation_icon.png") 
     log_entry_embed.add_field(name="", value= f"User ID: **{user.id}**")
     log_entry_embed.set_footer(text=f"Action made by: {author_name} ({author_id}).\nUTC: {current_time()}")
     await channel.send(file=image_file, embed=log_entry_embed)
@@ -85,7 +85,6 @@ class moderation(commands.Cog):
                 Loggin_channel = await get_logging_channel(self, ctx)
 
                 if reason == None:
-                    reason = "None"
                     await user.send(f"You've been kicked from **{server}**", file=discord.File("Images/kick.gif"))
                     await ctx.send(f'User {user.mention} has been kicked.\nPlease consider setting up the logging feature by running "/settings channels".')
 
@@ -126,7 +125,6 @@ class moderation(commands.Cog):
                 Loggin_channel = await get_logging_channel(self, ctx)
 
                 if reason == None:
-                    reason = "None"
                     await user.send(f"You've been banned from **{server}**", file=discord.File("Images/ban.gif"))
                     await ctx.send(f'User {user.mention} has been banned.\nPlease consider setting up the logging feature by running "/settings channels".')
 
@@ -173,7 +171,6 @@ class moderation(commands.Cog):
                 Loggin_channel = await get_logging_channel(self, ctx)
 
                 if reason == None:
-                    reason = "None"
                     await ctx.send(f'User {user.mention} has been banned.\nPlease consider setting up the logging feature by running "/settings channels".')
 
                 else:
@@ -187,7 +184,7 @@ class moderation(commands.Cog):
                     
                 await ctx.guild.unban(discord.Object(int(user_id)))
 
-# Mute #TODO Look over and bug test
+# Mute #DONE
 
     @commands.hybrid_command(name = "mute", description='Mutes a member', aliases = ["Mute"])
     @commands.has_permissions(moderate_members = True)
@@ -217,7 +214,7 @@ class moderation(commands.Cog):
         except:
             await ctx.send(f"Please insert a number")
             return
-        if duration == 0 or None:
+        if duration == 0:
             await ctx.send(f"Please insert a duration greater than 0")
             return
         if unit == "s":
@@ -244,13 +241,11 @@ class moderation(commands.Cog):
             Loggin_channel = await get_logging_channel(self, ctx)
 
             if reason == None:
-                reason = "None"
                 try:
                     await user.send(f"You've been muted from **{server}**", file=discord.File("Images/mute.gif"))
                     await ctx.send(f'User {user.mention} has been muted.')
                 except:
                     await ctx.send(f'User {user.mention} has been muted.\n-# (Failed to send DM to user)')
-
             else:
                 reason = " ".join(ctx.message.content.split()[2:])
                 await user.send(f"You've been muted from **{server}** for **{reason}**", file=discord.File("Images/mute.gif"))
@@ -260,114 +255,155 @@ class moderation(commands.Cog):
                 action = "muted"
                 time = tdelta
                 await log_entry(self, ctx, user, action, author_id, reason, time, Loggin_channel)
+
             await user.timeout(tdelta)
 
-# Unmute #FIXME
+# Unmute #DONE
 
-    @app_commands.command(name = "unmute", description='Unmutes a member')
-    @app_commands.checks.has_permissions(mute_members = True)
-    async def unmute(self, interaction: discord.Interaction, user: discord.Member, reason: typing.Optional[str] = None):
+    @commands.hybrid_command(name = "unmute", description='Unmutes a member', aliases = ["Unmute", "Umute", "umute"])
+    @commands.has_permissions(moderate_members = True)
+    async def unmute(self, ctx: commands.Context, user: discord.Member|discord.User, reason: typing.Optional[str] = None):
                 
-        author_id = interaction.user.id
-        user_id = user.id
-        server = interaction.guild.name
-        author_name = await interaction.client.fetch_user(int(author_id))
-
-        Loggin_channel = await self.pool.fetchrow('SELECT log_id FROM info WHERE guild_id = $1', interaction.guild.id)
         try:
-            log_id = Loggin_channel["log_id"]
-            Loggin_channel = await interaction.client.fetch_channel(log_id)
-            channel = Loggin_channel
+            user_id = user.id
         except:
-            Loggin_channel = False
+            user_id = int(user)
+            user = await self.bot.fetch_user(int(user_id))
+        server = ctx.guild.name
+        author_id = ctx.author.id
 
-        if Loggin_channel == False:
-                if reason == None:
-                    await interaction.response.send_message(f'User **{user}** has been unmuted.\nPlease consider setting up the logging feature by running "/settings channels".')
-                else:
-                    await interaction.response.send_message(f'User **{user}** has been unmuted for **{reason}**.\nPlease consider setting up the logging feature by running "/settings channels".')
+        if user_id == author_id:
+            await ctx.send("You can't actually do that, mostly because you can't use commands when muted but also because I won't let you\n -# (and you're an idiot)")
         else:
-            image_file = File("Images/moderation_icon.png", filename="moderation_icon.png")
-            Unmute_embed = discord.Embed(title="Moderation action!", color=discord.Color.from_rgb(140,27,27))    
-            if reason == None:
-                await interaction.response.send_message(f'User **{user}** has been unmuted.')
-                Unmute_embed.add_field(name="", value= f"User **{user}** was unmuted by {author_name}.", inline=False)
-            else:
-                await interaction.response.send_message(f'User **{user}** has been unmuted for **{reason}**.')
-                Unmute_embed.add_field(name="", value= f"User **{user}** was unmuted for **{reason}** by **{author_name}**.", inline=False)
+            Loggin_channel = await get_logging_channel(self, ctx)
 
-            Unmute_embed.set_thumbnail(url="attachment://moderation_icon.png")  
-            Unmute_embed.add_field(name="", value= f"User ID: **{user_id}**")
-            Unmute_embed.set_footer(text=f"Action made by: {author_name} ({author_id}).\nUTC: {current_time()}")
-            await channel.send(file=image_file, embed=Unmute_embed)
+            if reason == None:
+                try:
+                    await ctx.send(f'User {user.mention} has been muted.')
+                except:
+                    await ctx.send(f'User {user.mention} has been muted.\n-# (Failed to send DM to user)')
+            else:
+                reason = " ".join(ctx.message.content.split()[2:])
+                await ctx.send(f'User {user.mention} has been muted for **{reason}**.')
+
+            if Loggin_channel:
+                action = "unmuted"
+                time = None
+                await log_entry(self, ctx, user, action, author_id, reason, time, Loggin_channel)
+
         await user.edit(timed_out_until=None)
 
-# Errors #FIXME
+# Errors #DONE
 
     @kick.error
-    async def kick_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        elif isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)   
+    async def kick_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("The bot is missing permissions.", ephemeral=True)
+            return
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+            return 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You're missing one or more required arguments", ephemeral=True)
+            return 
         else:
-            raise error
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
 
     @ban.error
-    async def ban_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        elif isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)   
+    async def ban_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("The bot is missing permissions.", ephemeral=True)
+            return
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+            return 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You're missing one or more required arguments", ephemeral=True)
+            return 
         else:
-            raise error
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
 
     @unban.error
-    async def unban_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        elif isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)   
+    async def unban_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("The bot is missing permissions.", ephemeral=True)
+            return
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+            return 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You're missing one or more required arguments", ephemeral=True)
+            return 
         else:
-            raise error
-    
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        
     @mute.error
-    async def mute_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        elif isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)   
+    async def mute_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("The bot is missing permissions.", ephemeral=True)
+            return
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+            return 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You're missing one or more required arguments", ephemeral=True)
+            return 
         else:
-            raise error
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
     
     @unmute.error
-    async def unmute_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
-        elif isinstance(error, app_commands.BotMissingPermissions):
-            await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        elif isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)   
+    async def unmute_error(self, ctx: commands.Context, error):
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("The bot is missing permissions.", ephemeral=True)
+            return
+        elif isinstance(error, commands.MissingPermissions):
+            await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+            return 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You're missing one or more required arguments", ephemeral=True)
+            return 
         else:
-            raise error
+            await ctx.send("There was an error executing this command, please contact developer")
+            #print("----!!!!----")
+            #raise error
+            return
 
 async def setup(bot):
   await bot.add_cog(moderation(bot))

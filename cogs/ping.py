@@ -28,18 +28,24 @@ class ping(commands.Cog):
         Ping_embed.add_field(name="", value= "", inline=True)
         try:
             await self.pool.fetchrow('SELECT guild_id FROM info WHERE guild_id = $1', ctx.guild.id )
-            Ping_embed.add_field(name=":file_cabinet: Database:", value= f"**DB connection: __Normal__**", inline=True)
+            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Normal__**", inline=True)
         except:
-            Ping_embed.add_field(name=":file_cabinet: Database:", value= f"**DB connection: __Dead__**", inline=True)
+            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Dead__**", inline=True)
         Ping_embed.set_footer(text=f"UTC: {current_time()}")
         await ctx.send(embed=Ping_embed)
 
     @ping.error
     async def ping_error(self, ctx: commands.Context, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await ctx.send("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
+        if isinstance(error, commands.CommandInvokeError):
+            await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
+            return
+        else:
+            await ctx.send("There was an error executing this command, please contact developer")
+            print("----!!!!----")
+            raise error
+            return
 
 async def setup(bot):
   await bot.add_cog(ping(bot))

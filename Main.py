@@ -31,6 +31,7 @@ intents.guilds = True
 bot = commands.Bot(command_prefix= get_server_prefix, intents=intents)
 
 ##  Events
+
     #  on_guild_join
 @bot.event
 async def on_guild_join(guild):
@@ -44,12 +45,13 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     await bot.pool.execute('DELETE FROM info WHERE guild_id = $1', guild.id)
     
-##  Commands
-@bot.command()
-async def setprefix(ctx, new_prefix: str):
+##  Commands #TODO Add error handling and bug test
+@bot.hybrid_command(name = "prefix", description='Change prefix used in the server', aliases=["Prefix"])
+@commands.has_permissions(manage_guild = True)
+async def setprefix(ctx: commands.Context, prefix: str):
     try:
-        await bot.pool.execute('UPDATE info SET prefix = $2 WHERE guild_id = $1', ctx.guild.id, new_prefix)
-        await ctx.send(f"Changed prefix to {new_prefix}")
+        await bot.pool.execute('UPDATE info SET prefix = $2 WHERE guild_id = $1', ctx.guild.id, prefix)
+        await ctx.send(f"Changed prefix to {prefix}")
     except:
         await ctx.send("Could not change prefix, please try again")
 
