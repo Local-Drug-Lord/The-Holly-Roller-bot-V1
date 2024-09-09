@@ -3,6 +3,8 @@ from discord import app_commands, File
 from discord.ext import commands
 from datetime import datetime, timezone
 
+#FIXME Convert to hex
+
 #time
 def current_time ():
     now = datetime.now(timezone.utc)

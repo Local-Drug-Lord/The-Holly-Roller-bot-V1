@@ -45,8 +45,8 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     await bot.pool.execute('DELETE FROM info WHERE guild_id = $1', guild.id)
     
-##  Commands #TODO Add error handling and bug test
-@bot.hybrid_command(name = "prefix", description='Change prefix used in the server', aliases=["Prefix"])
+##  Commands #DONE
+@bot.hybrid_command(name = "prefix", description='Change prefix used for the bot in this server', aliases=["Prefix"])
 @commands.has_permissions(manage_guild = True)
 async def setprefix(ctx: commands.Context, prefix: str):
     try:
@@ -55,9 +55,28 @@ async def setprefix(ctx: commands.Context, prefix: str):
     except:
         await ctx.send("Could not change prefix, please try again")
 
+@setprefix.error
+async def setprefix_error(ctx: commands.Context, error):
+    if isinstance(error, commands.CommandInvokeError):
+        await ctx.send("There was an error executing this command, please contact developer")
+        #print("----!!!!----")
+        #raise error
+        return
+    elif isinstance(error, commands.MissingPermissions):
+        await ctx.send("You don't have permissions to do that :)", ephemeral=True)
+        return 
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("You're missing one or more required arguments", ephemeral=True)
+        return 
+    else:
+        await ctx.send("There was an error executing this command, please contact developer")
+        #print("----!!!!----")
+        #raise error
+        return
+
 ##  Core
 
-    #  on_ready
+#  on_ready
 @bot.event
 async def on_ready():
     synced = await bot.tree.sync()
@@ -66,7 +85,7 @@ async def on_ready():
     print("The Holly Roller is awake and high as a fucking kite just like always     ", "UTC:",current_time())
     print("---------------------------------------------------------------------")
     
-    #  Load cogs
+#  Load cogs
 async def load():
     start = perf_counter()
     for filename in os.listdir("./cogs"):
@@ -75,7 +94,7 @@ async def load():
     end = perf_counter()
     print(f"Loading took {(end-start)*1000} ms")
 
-    #  Main
+#  Main
 async def main():
 
     #startup debug
