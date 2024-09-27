@@ -1,15 +1,21 @@
 import discord
+import requests
 from discord import app_commands
 from discord.ext import commands
 from datetime import datetime, timezone
 
 from links import Holly_Roller_pfp, LDL_pfp
+from apikeys import help_down
 
 #time
 def current_time ():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
+
+def push_down():
+    r = requests.get(help_down)
+    return
 
 class help(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -47,10 +53,11 @@ class help(commands.Cog):
 
     @help.error
     async def help_error(self, interaction: discord.Interaction, error):
-        if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
-            print("----!!!!----")
-            raise error
+        push_down()
+        await interaction.response.send_message("There was an error executing this command, please contact developer")
+        print("----!!!!----")
+        raise error
+        return
 
 async def setup(bot):
   await bot.add_cog(help(bot))

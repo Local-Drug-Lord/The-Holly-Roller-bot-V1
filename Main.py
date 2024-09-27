@@ -1,4 +1,5 @@
 import discord
+import requests
 from discord import app_commands
 from discord.ext import commands
 import os
@@ -9,7 +10,7 @@ from datetime import datetime, timezone
 from time import perf_counter
 from asyncpg.pool import create_pool
 
-from apikeys import Token, Database_Name, Host_IP, Host_Port, User_Name, User_Pass
+from apikeys import Token, Database_Name, Host_IP, Host_Port, User_Name, User_Pass, main_down
 
 DEFAULT_PREFIX = "!"
 
@@ -18,6 +19,10 @@ def current_time ():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
+
+def push_down():
+    r = requests.get(main_down)
+    return
 
 async def get_server_prefix(bot, message):
     prefix = await bot.pool.fetchrow('SELECT prefix FROM info WHERE guild_id = $1', message.guild.id)
@@ -45,7 +50,7 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     await bot.pool.execute('DELETE FROM info WHERE guild_id = $1', guild.id)
     
-##  Commands #DONE
+##  Commands 
 @bot.hybrid_command(name = "prefix", description='Change prefix used for the bot in this server', aliases=["Prefix"])
 @commands.has_permissions(manage_guild = True)
 async def setprefix(ctx: commands.Context, prefix: str):
@@ -58,9 +63,10 @@ async def setprefix(ctx: commands.Context, prefix: str):
 @setprefix.error
 async def setprefix_error(ctx: commands.Context, error):
     if isinstance(error, commands.CommandInvokeError):
+        push_down()
         await ctx.send("There was an error executing this command, please contact developer")
-        #print("----!!!!----")
-        #raise error
+        print("----!!!!----")
+        raise error
         return
     elif isinstance(error, commands.MissingPermissions):
         await ctx.send("You don't have permissions to do that :)", ephemeral=True)
@@ -69,9 +75,10 @@ async def setprefix_error(ctx: commands.Context, error):
         await ctx.send("You're missing one or more required arguments", ephemeral=True)
         return 
     else:
+        push_down()
         await ctx.send("There was an error executing this command, please contact developer")
-        #print("----!!!!----")
-        #raise error
+        print("----!!!!----")
+        raise error
         return
 
 ##  Core

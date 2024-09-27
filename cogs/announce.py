@@ -1,9 +1,11 @@
 import discord
 import typing
+import requests
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions, CheckFailure
 from datetime import datetime, timezone
+from apikeys import announce_down
 
 #time
 def current_time ():
@@ -11,8 +13,9 @@ def current_time ():
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
 
-intents = discord.Intents.default()
-intents.members = True
+def push_down():
+    r = requests.get(announce_down)
+    return
 
 class announce(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -52,13 +55,21 @@ class announce(commands.Cog):
     @announce.error
     async def announce_error(self, interaction: discord.Interaction, error):
         if isinstance(error, app_commands.CommandInvokeError):
-            await interaction.response.send_message("!!ERROR!! Please contact <@1184901953885585490>", ephemeral=True)
+            push_down()
+            await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
-        if isinstance(error, app_commands.BotMissingPermissions):
+            return
+        elif isinstance(error, app_commands.BotMissingPermissions):
             await interaction.response.send_message("The bot is missing permissions.", ephemeral=True)
-        if isinstance(error, app_commands.MissingPermissions):
-            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)       
+        elif isinstance(error, app_commands.MissingPermissions):
+            await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)
+        else:
+            push_down()
+            await interaction.response.send_message("There was an error executing this command, please contact developer")
+            print("----!!!!----")
+            raise error
+            return
 
 async def setup(bot):
   await bot.add_cog(announce(bot))
