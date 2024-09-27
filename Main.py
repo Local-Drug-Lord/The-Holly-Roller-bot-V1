@@ -1,4 +1,5 @@
 import discord
+import discord.ext.commands
 import requests
 from discord import app_commands
 from discord.ext import commands
@@ -25,7 +26,8 @@ def push_down():
     return
 
 async def get_server_prefix(bot, message):
-    prefix = await bot.pool.fetchrow('SELECT prefix FROM info WHERE guild_id = $1', message.guild.id)
+    prefix_record = await bot.pool.fetchrow('SELECT prefix FROM info WHERE guild_id = $1', message.guild.id)
+    prefix = prefix_record["prefix"]
     return prefix
 
 intents = discord.Intents.default()
