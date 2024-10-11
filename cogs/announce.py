@@ -5,17 +5,12 @@ from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions, CheckFailure
 from datetime import datetime, timezone
-from apikeys import announce_down
 
 #time
 def current_time ():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
-
-def push_down():
-    r = requests.get(announce_down)
-    return
 
 class announce(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -55,7 +50,6 @@ class announce(commands.Cog):
     @announce.error
     async def announce_error(self, interaction: discord.Interaction, error):
         if isinstance(error, app_commands.CommandInvokeError):
-            push_down()
             await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -65,7 +59,6 @@ class announce(commands.Cog):
         elif isinstance(error, app_commands.MissingPermissions):
             await interaction.response.send_message("You don't have permissions to do that :)", ephemeral=True)
         else:
-            push_down()
             await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error

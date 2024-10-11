@@ -26,11 +26,6 @@ def current_time ():
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
 
-#   Push down to Uptime kuma
-def push_down():
-    r = requests.get(main_down)
-    return
-
 async def get_server_prefix(bot, message):
     prefix_record = await bot.pool.fetchrow('SELECT prefix FROM info WHERE guild_id = $1', message.guild.id)
     prefix = prefix_record["prefix"]
@@ -69,7 +64,6 @@ async def setprefix(ctx: commands.Context, prefix: str):
 @setprefix.error
 async def setprefix_error(ctx: commands.Context, error):
     if isinstance(error, commands.CommandInvokeError):
-        push_down()
         await ctx.send("There was an error executing this command, please contact developer")
         print("----!!!!----")
         raise error
@@ -81,7 +75,6 @@ async def setprefix_error(ctx: commands.Context, error):
         await ctx.send("You're missing one or more required arguments", ephemeral=True)
         return 
     else:
-        push_down()
         await ctx.send("There was an error executing this command, please contact developer")
         print("----!!!!----")
         raise error

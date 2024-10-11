@@ -3,17 +3,12 @@ import requests
 from discord import app_commands
 from discord.ext import commands
 from datetime import datetime, timezone
-from apikeys import ping_down
 
 #time
 def current_time ():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
-
-def push_down():
-    r = requests.get(ping_down)
-    return
 
 class ping(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -42,7 +37,6 @@ class ping(commands.Cog):
 
     @ping.error
     async def ping_error(self, ctx: commands.Context, error):
-        push_down()
         await ctx.send("There was an error executing this command, please contact developer")
         print("----!!!!----")
         raise error 

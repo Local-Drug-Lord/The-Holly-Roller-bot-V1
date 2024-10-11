@@ -3,7 +3,6 @@ import typing
 import asyncio
 import asyncpg
 import logging
-import requests
 from typing import Literal
 from discord import app_commands, File
 from discord.ext import commands
@@ -12,8 +11,6 @@ from datetime import datetime, timezone
 from datetime import timedelta
 
 from links import Holly_Roller_pfp, LDL_pfp
-from apikeys import moderation_down
-from Main import push_down
 
 #time
 
@@ -301,7 +298,6 @@ class moderation(commands.Cog):
     @kick.error
     async def kick_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -316,7 +312,6 @@ class moderation(commands.Cog):
             await ctx.send("You're missing one or more required arguments", ephemeral=True)
             return 
         else:
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -325,7 +320,6 @@ class moderation(commands.Cog):
     @ban.error
     async def ban_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -340,7 +334,6 @@ class moderation(commands.Cog):
             await ctx.send("You're missing one or more required arguments", ephemeral=True)
             return 
         else:
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -349,7 +342,6 @@ class moderation(commands.Cog):
     @unban.error
     async def unban_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -364,7 +356,6 @@ class moderation(commands.Cog):
             await ctx.send("You're missing one or more required arguments", ephemeral=True)
             return 
         else:
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -373,7 +364,6 @@ class moderation(commands.Cog):
     @mute.error
     async def mute_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -388,7 +378,6 @@ class moderation(commands.Cog):
             await ctx.send("You're missing one or more required arguments", ephemeral=True)
             return 
         else:
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -397,7 +386,6 @@ class moderation(commands.Cog):
     @unmute.error
     async def unmute_error(self, ctx: commands.Context, error):
         if isinstance(error, commands.CommandInvokeError):
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -412,7 +400,6 @@ class moderation(commands.Cog):
             await ctx.send("You're missing one or more required arguments", ephemeral=True)
             return 
         else:
-            push_down()
             await ctx.send("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error

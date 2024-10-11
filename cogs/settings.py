@@ -6,7 +6,6 @@ from discord import app_commands, File
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions, CheckFailure
 from datetime import datetime, timezone
-from apikeys import settings_down
 
 #TODO Make a it so you can't update a DB value to the thing it already is
 
@@ -15,10 +14,6 @@ def current_time():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
-
-def push_down():
-    r = requests.get(settings_down)
-    return
 
 #rgb > list (R,G,B)
 def Convert(string):
@@ -286,7 +281,6 @@ class settings(commands.Cog):
     @channels.error
     async def channels_error(self, interaction: discord.Interaction, error):
         if isinstance(error, app_commands.CommandInvokeError):
-            push_down()
             await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -297,7 +291,6 @@ class settings(commands.Cog):
     @messages.error
     async def messages_error(self, interaction: discord.Interaction, error):
         if isinstance(error, app_commands.CommandInvokeError):
-            push_down()
             await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
@@ -308,7 +301,6 @@ class settings(commands.Cog):
     @show.error
     async def show_error(self, interaction: discord.Interaction, error):
         if isinstance(error, app_commands.CommandInvokeError):
-            push_down()
             await interaction.response.send_message("There was an error executing this command, please contact developer")
             print("----!!!!----")
             raise error
