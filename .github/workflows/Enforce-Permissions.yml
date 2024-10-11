@@ -1,0 +1,19 @@
+name: Enforce Permissions
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  enforce-permissions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check permissions
+        run: |
+          if [[ "${{ github.actor }}" != "Local-Drug-Lord" ]]; then
+            echo "Only 'Local-Drug-Lord' is allowed to make changes."
+            exit 1
+          fi
