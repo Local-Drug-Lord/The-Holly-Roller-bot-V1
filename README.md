@@ -5,11 +5,11 @@
 The Holy Roller is a general purpose discord bot made and managed by me (Local_Drug_Lord). The bot had its first real release on the 17th of january 2024 with added support for more than one server 6 months later with the help of Postgresql. This addition of the database is what I've come to call V1 of the bot as i had to more or less redo the whole thing from scratch. 
 
 As of recently I've come to the decision to make the code open source, do I recommend using my code? No, not at all. Why? Well where do I start?
-1, It's really shitty code.
-2, I'm not a professional programmer and shall not be trusted.
-3, There is bugs, lots of bugs. (I'm working on some of them, if you find anything please make a thingy in the issues tab and i shall take a look at it. Don't forget to use the template :) )
-4, Coding is fun, make your own bot from scratch.
-5, I don't trust myself when it comes to good code.
+1. It's really shitty code.
+2. I'm not a professional programmer and shall not be trusted.
+3. There is bugs, lots of bugs. (I'm working on some of them, if you find anything please make a thingy in the issues tab and i shall take a look at it. Don't forget to use the template :) )
+4. Coding is fun, make your own bot from scratch.
+5. I don't trust myself when it comes to good code.
 
 ## Why Is The Holy Roller?
 
