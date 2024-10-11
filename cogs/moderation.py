@@ -13,6 +13,7 @@ from datetime import timedelta
 
 from links import Holly_Roller_pfp, LDL_pfp
 from apikeys import moderation_down
+from Main import push_down
 
 #time
 
@@ -20,10 +21,6 @@ def current_time():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
-
-def push_down():
-    r = requests.get(moderation_down)
-    return
 
 #Get logging channel
 

@@ -1,12 +1,12 @@
 import discord
 import discord.ext.commands
 import requests
-from discord import app_commands
-from discord.ext import commands
 import os
 import asyncio
 import time
 import asyncpg
+from discord import app_commands
+from discord.ext import commands
 from datetime import datetime, timezone
 from time import perf_counter
 from asyncpg.pool import create_pool
@@ -15,12 +15,18 @@ from apikeys import Token, Database_Name, Host_IP, Host_Port, User_Name, User_Pa
 
 DEFAULT_PREFIX = "!"
 
-#time
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+intents.guilds = True
+
+#   time
 def current_time ():
     now = datetime.now(timezone.utc)
     current_time = now.strftime("%Y-%m-%d %H:%M:%S")
     return current_time
 
+#   Push down to Uptime kuma
 def push_down():
     r = requests.get(main_down)
     return
@@ -29,11 +35,6 @@ async def get_server_prefix(bot, message):
     prefix_record = await bot.pool.fetchrow('SELECT prefix FROM info WHERE guild_id = $1', message.guild.id)
     prefix = prefix_record["prefix"]
     return prefix
-
-intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-intents.guilds = True
 
 bot = commands.Bot(command_prefix= get_server_prefix, intents=intents)
 
@@ -52,7 +53,9 @@ async def on_guild_join(guild):
 async def on_guild_remove(guild):
     await bot.pool.execute('DELETE FROM info WHERE guild_id = $1', guild.id)
     
-##  Commands 
+##  Commands
+
+#   Change prefix 
 @bot.hybrid_command(name = "prefix", description='Change prefix used for the bot in this server', aliases=["Prefix"])
 @commands.has_permissions(manage_guild = True)
 async def setprefix(ctx: commands.Context, prefix: str):
@@ -62,6 +65,7 @@ async def setprefix(ctx: commands.Context, prefix: str):
     except:
         await ctx.send("Could not change prefix, please try again")
 
+#   Error handling
 @setprefix.error
 async def setprefix_error(ctx: commands.Context, error):
     if isinstance(error, commands.CommandInvokeError):
