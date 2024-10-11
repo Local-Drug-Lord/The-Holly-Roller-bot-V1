@@ -1,7 +1,7 @@
 # TOS and EUA 2024-10-11 The Holy Roller
 
 ## !!! NOTE !!!
-### This is for server owners, if you're not a server owner and just an admin please forward/send a copy of this TOS and EUA to your server owner.
+### This is mainly for server owners, if you're not a server owner and just an admin please forward/send a copy of this TOS and EUA to your server owner.
 
 ## You may use this bot/application/code/repository on your discord server(s) on these conditions:
 
