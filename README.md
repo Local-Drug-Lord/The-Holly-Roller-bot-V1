@@ -2,7 +2,7 @@
 
 ## What Is The Holy Roller?
 
-The Holy Roller is a general purpose discord bot made and managed by me (Local_Drug_Lord). The bot had its first real release on the 17th of january 2024 with added support for more than one server 6 months later with the help of Postgresql. This addition of the database is what I've come to call V1 of the bot as i had to more or less redo the whole thing from scratch. 
+The Holy Roller is a (to be) general purpose discord bot made and managed by me (Local_Drug_Lord). The bot had its first real release on the 17th of january 2024 with added support for more than one server at a time 6 months later with the help of a Postgresql database. This addition of the database is what I've come to call V1 of the bot as I had to more or less redo the whole thing from scratch.
 
 As of recently I've come to the decision to make the code open source, do I recommend using my code? No, not at all. Why? Well where do I start?
 1. It's really shitty code.
