@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from time import perf_counter
 from asyncpg.pool import create_pool
 
-from apikeys import Token, Database_Name, Host_IP, Host_Port, User_Name, User_Pass, main_down
+from apikeys import Token, Database_Name, Host_IP, Host_Port, User_Name, User_Pass
 
 DEFAULT_PREFIX = "!"
 
