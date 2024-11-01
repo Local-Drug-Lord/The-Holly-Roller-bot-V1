@@ -9,18 +9,20 @@
 To make the bot work properly you need a Postgre SQL database, you'll also need an admin platform (in my case PgAdmin). In your admin panel you need to connect your database server to the panel and then make a "table" with the name info (a table is basically just an excel file but in the SQL programming language). This table needs to have the following columns: (this is caps sensitive)
 
 - guild_id (needs to be prime key and not NULL)
-- log_id
-- wlc_id
-- bye_id
-- wlc_pic
-- bye_pic
-- wlc_msg
-- bye_msg
-- wlc_title
-- bye_title
-- wlc_rgb
-- bye_rgb
-- prefix
+- log_id (big int)
+- wlc_id (big int)
+- bye_id (big int)
+- wlc_pic (text)
+- bye_pic (text)
+- wlc_msg (text)
+- bye_msg (text)
+- wlc_title (text)
+- bye_title (text)
+- wlc_rgb (text)
+- bye_rgb (text)
+- prefix (text)
+Optional:
+- notes (text)
 
 ## Additional links
 

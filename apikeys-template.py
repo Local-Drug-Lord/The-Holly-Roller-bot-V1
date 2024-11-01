@@ -6,6 +6,6 @@ Token = ""  #Insert your discord bot token !!! DO NOT SHARE THIS WITH ANYONE AS 
 #DB stuff
 Database_Name = '' #The name of your database
 Host_IP = '' #The IP of the host(server) running your database
-Host_Port = '' #The port of your database
+Host_Port = '' #The host port of your database
 User_Name = '' #Username used to log onto your database
 User_Pass = '' #Password used to log onto your database
