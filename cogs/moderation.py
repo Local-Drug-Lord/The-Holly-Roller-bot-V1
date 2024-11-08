@@ -10,7 +10,7 @@ from discord.ext.commands import has_permissions, MissingPermissions, CheckFailu
 from datetime import datetime, timezone
 from datetime import timedelta
 
-from links import Holly_Roller_pfp, LDL_pfp
+#from links import Holly_Roller_pfp, LDL_pfp
 
 #time
 
@@ -158,14 +158,13 @@ class moderation(commands.Cog):
         author_id = ctx.author.id
         server = ctx.guild.name
 
-        try:
-            await ctx.guild.fetch_ban(user)
-        except discord.NotFound:
-            await ctx.send("That user is not banned in this server")
+        if user_id == author_id:
+            await ctx.send("Ok, let's think this over...\nYou're in the server you want to be unbanned from... right?\n-# (Buddy ain't the smartest :cold_face:)")
         else:
-
-            if user_id == author_id:
-                await ctx.send("Ok, let's think this over...\nYou're in the server you want to be unbanned from... right?\n-# (Buddy ain't the smartest :cold_face:)")
+            try:
+                await ctx.guild.fetch_ban(user)
+            except discord.NotFound:
+                await ctx.send("That user is not banned in this server")
             else:
 
                 Loggin_channel = await get_logging_channel(self, ctx)
@@ -197,12 +196,6 @@ class moderation(commands.Cog):
             user = await self.bot.fetch_user(int(user_id))
         server = ctx.guild.name
         author_id = ctx.author.id
-
-        if user_id == author_id:
-            await ctx.send("Ok, let's think this over...\nYou're in the server you want to be unbanned from... right?\n-# (Buddy ain't the smartest :cold_face:)")
-        else:
-
-            Loggin_channel = await get_logging_channel(self, ctx)
 
         # Validate time input
         valid_units = {"S", "M", "H", "D"}
@@ -273,7 +266,7 @@ class moderation(commands.Cog):
         author_id = ctx.author.id
 
         if user_id == author_id:
-            await ctx.send("You can't actually do that, mostly because you can't use commands when muted but also because I won't let you\n -# (and you're an idiot)")
+            await ctx.send("You can't actually do that, mostly because you can't use commands when muted but also because I won't let you\n-# (and you're an idiot)")
         else:
             Loggin_channel = await get_logging_channel(self, ctx)
 
@@ -290,8 +283,7 @@ class moderation(commands.Cog):
                 action = "unmuted"
                 time = None
                 await log_entry(self, ctx, user, action, author_id, reason, time, Loggin_channel)
-
-        await user.edit(timed_out_until=None)
+            await user.edit(timed_out_until=None)
 
 # Errors 
 

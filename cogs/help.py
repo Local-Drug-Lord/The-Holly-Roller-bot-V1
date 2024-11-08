@@ -19,7 +19,7 @@ class help(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
-        print("---|Help      cog loaded!|---", current_time())
+        print("---|Help       cog loaded!|---", current_time())
 
     @app_commands.command(name="help", description="command help list")
     async def help(self, interaction: discord.Integration):

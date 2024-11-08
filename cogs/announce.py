@@ -20,7 +20,7 @@ class announce(commands.Cog):
     async def on_ready(self):
         await self.bot.tree.sync()
     
-        print("---|Announce  cog loaded!|---", current_time())
+        print("---|Announce   cog loaded!|---", current_time())
     
     @app_commands.command(name = "announce", description='Announce something!')
     @app_commands.checks.has_permissions(administrator = True)

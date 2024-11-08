@@ -1,6 +1,5 @@
 import discord
 import discord.ext.commands
-import requests
 import os
 import asyncio
 import time
@@ -100,19 +99,25 @@ async def load():
     end = perf_counter()
     print(f"Loading took {(end-start)*1000} ms")
 
+async def connect():
+    try:
+        bot.pool = await asyncpg.create_pool(database=Database_Name, host=Host_IP, port=Host_Port, user=User_Name, password=User_Pass)
+        print("Connection to DB was successfully established.")
+        return True
+    except:
+        print("Connection to DB failed to establish.")
+        return False
+
 #  Main
 async def main():
 
     #startup debug
-    discord.utils.setup_logging()
+    #discord.utils.setup_logging()
 
-    #DB connection
-    try:
-        bot.pool = await asyncpg.create_pool(database=Database_Name, host=Host_IP, port=Host_Port, user=User_Name, password=User_Pass)
-        print("Connection to DB was successfully established.")
-    except:
-        print("Connection to DB failed to establish.")
-        exit()
+    connected = False
+
+    while connected == False:
+        connected = await connect()
 
     #Start
     try:

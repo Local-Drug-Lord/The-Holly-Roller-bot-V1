@@ -1,5 +1,4 @@
 import discord
-import requests
 from discord import app_commands
 from discord.ext import commands
 from datetime import datetime, timezone
@@ -24,9 +23,7 @@ class ping(commands.Cog):
     async def ping(self, ctx: commands.Context):
         bot_latency = round(self.bot.latency * 1000)
         Ping_embed = discord.Embed(title="Pong! :ping_pong:", color=discord.Color.from_rgb(41,134,0))
-        Ping_embed.add_field(name="", value= "", inline=False)
         Ping_embed.add_field(name=":satellite: API:", value= f"**{bot_latency} ms.**", inline=True)
-        Ping_embed.add_field(name="", value= "", inline=True)
         try:
             await self.pool.fetchrow('SELECT guild_id FROM info WHERE guild_id = $1', ctx.guild.id )
             Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Normal__**", inline=True)
