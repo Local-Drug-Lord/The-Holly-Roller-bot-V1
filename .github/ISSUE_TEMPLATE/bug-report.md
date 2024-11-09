@@ -1,8 +1,9 @@
 ---
-Name: Bug report
-About: Create a report to help us improve
-Title: ''
-Server ID: ''
+name: Bug report
+about: A standard bug report
+title: ''
+labels: Bug
+assignees: Local-Drug-Lord
 
 ---
 
