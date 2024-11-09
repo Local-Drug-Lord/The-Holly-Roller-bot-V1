@@ -10,8 +10,6 @@ from discord.ext.commands import has_permissions, MissingPermissions, CheckFailu
 from datetime import datetime, timezone
 from datetime import timedelta
 
-#from links import Holly_Roller_pfp, LDL_pfp
-
 #time
 
 def current_time():

@@ -104,20 +104,6 @@ async def get_goodbye(guild_id, goodbye, Type, member, guild_name):
         except:
             goodbye_image = False
         return goodbye_image
-    
-async def kick_on_join(join, member, guild_name):
-    channel = await join.bot.fetch_channel(1246495926173040671)
-    channel_2 = await join.bot.fetch_channel(1064732487231737896)
-    reason = "being blackberry or being related to him"
-    await member.kick(reason="User was flagged as being blackberry or being related to him")
-    image_file = File("Images/moderation_icon.png", filename="moderation_icon.png")
-    ban_embed = discord.Embed(title="Moderation action!", color=discord.Color.from_rgb(140,27,27))
-    ban_embed.add_field(name="", value= f'User **{member}** was banned for **{reason}** by **"Anti Jackson Filter"**.', inline=False)
-    ban_embed.set_thumbnail(url="attachment://moderation_icon.png")
-    ban_embed.add_field(name="", value= f"User ID: **{member.id}**")
-    ban_embed.set_footer(text=f"UTC: {current_time()}")
-    await channel.send(file=image_file, embed=ban_embed)
-    await channel_2.send("@everyone\n:rotating_light: Jackson/Blackberry or James has tried to join the server")
 
 class greetings(commands.Cog):
     def __init__(self, bot: commands.bot):
@@ -127,7 +113,7 @@ class greetings(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.tree.sync()
-        print("---|greetings cog loaded!|---", current_time())
+        print("---|greetings  cog loaded!|---", current_time())
 
     @commands.Cog.listener()
     async def on_member_join(self, member):

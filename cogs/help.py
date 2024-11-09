@@ -4,8 +4,6 @@ from discord import app_commands
 from discord.ext import commands
 from datetime import datetime, timezone
 
-from links import Holly_Roller_pfp, LDL_pfp
-
 #time
 def current_time ():
     now = datetime.now(timezone.utc)
