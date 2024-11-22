@@ -1,10 +1,6 @@
 import discord
 import typing
-import asyncio
-import asyncpg
-import logging
-from typing import Literal
-from discord import app_commands, File
+from discord import File
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions, CheckFailure
 from datetime import datetime, timezone
@@ -269,13 +265,10 @@ class moderation(commands.Cog):
             Loggin_channel = await get_logging_channel(self, ctx)
 
             if reason == None:
-                try:
-                    await ctx.send(f'User {user.mention} has been muted.')
-                except:
-                    await ctx.send(f'User {user.mention} has been muted.\n-# (Failed to send DM to user)')
+                await ctx.send(f'User {user.mention} has been unmuted.')
             else:
                 reason = " ".join(ctx.message.content.split()[2:])
-                await ctx.send(f'User {user.mention} has been muted for **{reason}**.')
+                await ctx.send(f'User {user.mention} has been unmuted for **{reason}**.')
 
             if Loggin_channel:
                 action = "unmuted"

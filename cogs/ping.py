@@ -1,5 +1,4 @@
 import discord
-from discord import app_commands
 from discord.ext import commands
 from datetime import datetime, timezone
 
@@ -19,16 +18,17 @@ class ping(commands.Cog):
         await self.bot.tree.sync()
         print("---|Ping       cog loaded!|---", current_time())
 
-    @commands.hybrid_command(name="ping", description="you ping i pong! ;)") #TODO General appearance modifications
+    @commands.hybrid_command(name="ping", description="you ping i pong! ;)", aliases=["Ping"])
     async def ping(self, ctx: commands.Context):
         bot_latency = round(self.bot.latency * 1000)
         Ping_embed = discord.Embed(title="Pong! :ping_pong:", color=discord.Color.from_rgb(41,134,0))
-        Ping_embed.add_field(name=":satellite: API:", value= f"**{bot_latency} ms.**", inline=True)
+        Ping_embed.add_field(name=":satellite: API:", value= f"**{bot_latency} ms.**", inline=False)
+
         try:
-            await self.pool.fetchrow('SELECT guild_id FROM info WHERE guild_id = $1', ctx.guild.id )
-            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Normal__**", inline=True)
+            await self.pool.fetchrow('SELECT guild_id FROM info') #WHERE guild_id = $1', ctx.guild.id )
+            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Normal__**", inline=False)
         except:
-            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Dead__**", inline=True)
+            Ping_embed.add_field(name=":file_cabinet: Database:", value= "**DB connection: __Dead__**", inline=False)
         Ping_embed.set_footer(text=f"UTC: {current_time()}")
         await ctx.send(embed=Ping_embed)
 

@@ -2,7 +2,6 @@ import discord
 import discord.ext.commands
 import os
 import asyncio
-import time
 import asyncpg
 from discord import app_commands
 from discord.ext import commands
@@ -30,7 +29,7 @@ async def get_server_prefix(bot, message):
     prefix = prefix_record["prefix"]
     return prefix
 
-bot = commands.Bot(command_prefix= get_server_prefix, intents=intents)
+bot = commands.Bot(command_prefix= get_server_prefix, help_command=None, intents=intents)
 
 ##  Events
 
@@ -111,11 +110,10 @@ async def connect():
 #  Main
 async def main():
 
-    #startup debug
+    #startup debugging, remove # to turn on
     #discord.utils.setup_logging()
 
     connected = False
-
     while connected == False:
         connected = await connect()
 
