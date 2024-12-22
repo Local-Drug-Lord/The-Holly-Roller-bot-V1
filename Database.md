@@ -18,8 +18,8 @@ To make the bot work properly you need a Postgre SQL database, you'll also need 
 - bye_msg (text)
 - wlc_title (text)
 - bye_title (text)
-- wlc_rgb (text)
-- bye_rgb (text)
+- wlc_hex (text)
+- bye_hex (text)
 - prefix (text)
 Optional:
 - notes (text)

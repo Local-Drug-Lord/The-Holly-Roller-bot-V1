@@ -1,9 +1,6 @@
 import discord
-from discord import app_commands, File
 from discord.ext import commands
 from datetime import datetime, timezone
-
-#FIXME Convert to hex
 
 #time
 def current_time ():
@@ -28,19 +25,13 @@ async def get_welcome(guild_id, welcome, Type, member, guild_name):
         except:
             welcome_title = False
         return welcome_title
-    elif Type == "rgb":
-        welcome_rgb = await welcome.pool.fetchrow('SELECT wlc_rgb FROM info WHERE guild_id = $1', guild_id)
-        wlc_rgb = welcome_rgb["wlc_rgb"]
-        if wlc_rgb is None:
-            welcome_rgb = discord.Color.from_rgb(1, 134, 0)
+    elif Type == "hex":
+        welcome_hex = await welcome.pool.fetchrow('SELECT wlc_rgb FROM info WHERE guild_id = $1', guild_id)
+        wlc_hex = welcome_hex["wlc_rgb"]
+        if wlc_hex is None:
+            welcome_hex = discord.Color.from_rgb(1, 134, 0)
         else:
-            rgb_string = welcome_rgb["wlc_rgb"]
-            r, g, b = rgb_string.split(",")
-            r = int(r)
-            g = int(g)
-            b = int(b)
-            welcome_rgb = discord.Color.from_rgb(r, g, b)
-        return welcome_rgb
+            return wlc_hex
     elif Type == "message":
         welcome_message = await welcome.pool.fetchrow('SELECT wlc_msg FROM info WHERE guild_id = $1', guild_id)
         try:
@@ -75,19 +66,15 @@ async def get_goodbye(guild_id, goodbye, Type, member, guild_name):
         except:
             goodbye_title = False
         return goodbye_title
-    elif Type == "rgb":
-        goodbye_rgb = await goodbye.pool.fetchrow('SELECT bye_rgb FROM info WHERE guild_id = $1', guild_id)
-        bye_rgb = goodbye_rgb["bye_rgb"]
-        if bye_rgb is None:
-            goodbye_rgb = discord.Color.from_rgb(1, 134, 0)
+    elif Type == "hex":
+        goodbye_hex = await goodbye.pool.fetchrow('SELECT bye_rgb FROM info WHERE guild_id = $1', guild_id)
+        bye_hex = goodbye_hex["bye_rgb"]
+        if bye_hex is None:
+            goodbye_hex = discord.Color.from_rgb(1, 134, 0)
+            return goodbye_hex
         else:
-            rgb_string = goodbye_rgb["bye_rgb"]
-            r, g, b = rgb_string.split(",")
-            r = int(r)
-            g = int(g)
-            b = int(b)
-            goodbye_rgb = discord.Color.from_rgb(r, g, b)
-        return goodbye_rgb
+            return bye_hex
+        
     elif Type == "message":
         goodbye_message = await goodbye.pool.fetchrow('SELECT bye_msg FROM info WHERE guild_id = $1', guild_id)
         try:
@@ -117,23 +104,16 @@ class greetings(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        positive_return = 0
         guild_id = member.guild.id
         guild_name = member.guild
         Type = "channel"
         channel = await get_welcome(guild_id, self, Type, member, guild_name)
-        join = self
-        #if member.id == 751126644412121258 or 1225093203989106773 or 1139355142152532059:
-        #    await kick_on_join(join, member, guild_name)
-        #elif member == "blackberry001" or "blackberry08596" or "james340134":
-        #    await kick_on_join(join, member, guild_name)
-        #else:
         if channel:
             Type = "title"
             title = await get_welcome(guild_id, self, Type, member, guild_name)
 
-            Type = "rgb"
-            rgb = await get_welcome(guild_id, self, Type, member, guild_name)
+            Type = "hex"
+            hex = await get_welcome(guild_id, self, Type, member, guild_name)
 
             Type = "message"
             message = await get_welcome(guild_id, self, Type, member, guild_name)
@@ -143,20 +123,18 @@ class greetings(commands.Cog):
 
             if message or title or image:
                 if title:
-                    welcome_embed = discord.Embed(title=title, color=rgb)
+                    welcome_embed = discord.Embed(title=title, color=discord.Color.from_str(hex))
                 else:
-                    welcome_embed = discord.Embed(title="", color=rgb)      
+                    welcome_embed = discord.Embed(title="", color=discord.Color.from_str(hex))      
                 if message:
                     welcome_embed.add_field(name="", value=message, inline=True)
                 if image:
                     welcome_embed.set_image(url=image)
                 welcome_embed.set_footer(text=f"{member} ({member.id})\nUTC: {current_time()}")
-                await channel.send(embed=welcome_embed)
-                await channel.send(member.mention, delete_after=0)
+                await channel.send(member.mention, embed=welcome_embed)
             
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        positive_return = 0
         guild_id = member.guild.id
         guild_name = member.guild
         Type = "channel"
@@ -167,8 +145,8 @@ class greetings(commands.Cog):
             Type = "title"
             title = await get_goodbye(guild_id, self, Type, member, guild_name)
 
-            Type = "rgb"
-            rgb = await get_goodbye(guild_id, self, Type, member, guild_name)
+            Type = "hex"
+            hex = await get_goodbye(guild_id, self, Type, member, guild_name)
 
             Type = "message"
             message = await get_goodbye(guild_id, self, Type, member, guild_name)
@@ -178,16 +156,15 @@ class greetings(commands.Cog):
 
             if message or title or image:
                 if title:
-                    goodbye_embed = discord.Embed(title=title, color=rgb)
+                    goodbye_embed = discord.Embed(title=title, color=discord.Color.from_str(hex))
                 else:
-                    goodbye_embed = discord.Embed(title="", color=rgb)
+                    goodbye_embed = discord.Embed(title="", color=discord.Color.from_str(hex))
                 if message:
                     goodbye_embed.add_field(name="", value=f"" + message, inline=True)
                 if image:
                     goodbye_embed.set_image(url=image)
                 goodbye_embed.set_footer(text=f"{member} ({member.id})\nUTC: {current_time()}")
                 await channel.send(embed=goodbye_embed)
-                await channel.send(member.mention, delete_after=0)
 
 async def setup(bot):
   await bot.add_cog(greetings(bot))
